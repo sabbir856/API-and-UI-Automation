@@ -1,0 +1,288 @@
+{
+  "info": {
+    "_postman_id": "43ae8691-fc35-4b91-b13b-89543c04be17",
+    "name": "project-api",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "56809711",
+    "_collection_link": "https://go.postman.co/collection/56809711-43ae8691-fc35-4b91-b13b-89543c04be17?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "log-in",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const responsebody = pm.response.json();\r\n\r\npm.test(\"status code validation\", () => {\r\n    pm.expect(pm.response.code).to.eql(200);\r\n});\r\n\r\npm.collectionVariables.set(\"access-token\",responsebody.token);\r\n\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "reqres_3db8518cd227407e8539b2741db318f1"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"eve.holt@reqres.in\",\r\n    \"password\": \"cityslicka\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseurl}}/login",
+          "host": [
+            "{{baseurl}}"
+          ],
+          "path": [
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "login-id",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const ids = [1, 2, 3, 4, 5, 6];\n\nfunction getRandomInteger(min, max) {\n    return Math.floor(Math.random() * (max - min + 1)) + min;\n};\nconst randomId = getRandomInteger(0, 5);\nconst searchId= ids[randomId];\n// console.log(searchId);\npm.collectionVariables.set(\"search-id\",searchId);\n"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const responsebody = pm.response.json();\r\n\r\npm.test(\"Status code validation\", () => {\r\n    pm.expect(pm.response.code).to.eql(200);\r\n});\r\n\r\nconst userfName = responsebody.data.first_name;\r\nconst userlName = responsebody.data.last_name;\r\nconst useremail = responsebody.data.email;\r\n\r\npm.collectionVariables.set(\"user-fName\",userfName);\r\npm.collectionVariables.set(\"user-lName\",userlName);\r\npm.collectionVariables.set(\"user-email\",useremail);\r\n\r\nconst expectedFname = pm.collectionVariables.get(\"user-fName\");\r\nconst expectedLname = pm.collectionVariables.get(\"user-lName\");\r\nconst expectedEmail = pm.collectionVariables.get(\"user-email\");\r\n\r\npm.test(\"First name validation\", () => {\r\n    pm.expect(userfName).to.eql(expectedFname);\r\n});\r\npm.test(\"Last name validation\", () => {\r\n    pm.expect(userlName).to.eql(expectedLname);\r\n});\r\npm.test(\"Email validation\", () => {\r\n    pm.expect(useremail).to.eql(expectedEmail);\r\n});\r\n\r\n\r\n\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "reqres_3db8518cd227407e8539b2741db318f1"
+          }
+        ],
+        "url": {
+          "raw": "{{baseurl}}/users/{{search-id}}",
+          "host": [
+            "{{baseurl}}"
+          ],
+          "path": [
+            "users",
+            "{{search-id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "update-user",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const responsebody = pm.response.json();\n\npm.test(\"Status code validation\", () => {\n    pm.expect(pm.response.code).to.eql(200);\n});\n\nconst actualFirstname = responsebody.first_name;\npm.collectionVariables.set(\"actualfirst-name\", actualFirstname);\nconst expectedFirstName=pm.collectionVariables.get(\"actualfirst-name\")\n\nconst actualLastname = responsebody.last_name;\npm.collectionVariables.set(\"actuallast-name\", actualLastname);\nconst expectedLastName= pm.collectionVariables.get(\"actuallast-name\")\n\nconst actualJob = responsebody.job;\npm.collectionVariables.set(\"actual-job\", actualJob);\nconst expectedJob = pm.collectionVariables.get(\"actual-job\")\n\nconst actualupdateAT= responsebody.updatedAt;\npm.collectionVariables.set(\"updateat\",actualupdateAT);\nconst expextedUpdateAT= pm.collectionVariables.get(\"updateat\");\n\npm.test(\"First name validation\", () => {\n    pm.expect(actualFirstname).to.eql( expectedFirstName);\n});\n\npm.test(\"Last name validation\", () => {\n    pm.expect(actualLastname).to.eql(expectedLastName);\n});\n\npm.test(\"job validation\", () => {\n    pm.expect(actualJob).to.eql(expectedJob);\n});\n\n\npm.test(\"updateat validation\", () => {\n    pm.expect(actualupdateAT).to.eql(expextedUpdateAT);\n});\n\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "reqres_3db8518cd227407e8539b2741db318f1"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"id\": 1,\r\n    \"email\": \"sabbirsts420@gmail.com\",\r\n    \"first_name\": \"Sabbir\",\r\n    \"last_name\": \"Rahman\",\r\n    \"job\": \"SQA Engineer\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseurl}}/users/1",
+          "host": [
+            "{{baseurl}}"
+          ],
+          "path": [
+            "users",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "field-update",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const responsebody = pm.response.json();\r\n\r\npm.test(\"Status code validation\", () => {\r\n    pm.expect(pm.response.code).to.eql(200);\r\n});\r\nconst newjob=responsebody.job;\r\npm.collectionVariables.set(\"new-job\",newjob);\r\nconst actualnewjob=pm.collectionVariables.get(\"new-job\");\r\n\r\npm.test(\"job validation\", () => {\r\n    pm.expect(newjob).to.eql(actualnewjob);\r\n});\r\n\r\nconst actualFirstname = responsebody.first_name;\r\npm.collectionVariables.set(\"actualfirst-name\", actualFirstname);\r\nconst previousfirstname= pm.collectionVariables.get(\"actualfirst-name\");\r\n\r\nconst actualLastname = responsebody.last_name;\r\npm.collectionVariables.set(\"actuallast-name\", actualLastname);\r\nconst previouslasttname=pm.collectionVariables.get(\"actuallast-name\")\r\n\r\npm.test(\"Firsname unchanged validation\", () => {\r\n    pm.expect(actualFirstname).to.eql( previousfirstname);\r\n});\r\n\r\npm.test(\"last name unchanged validation\", () => {\r\n    pm.expect(actualLastname).to.eql(previouslasttname);\r\n});\r\n\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "reqres_3db8518cd227407e8539b2741db318f1",
+            "description": "reqres_3db8518cd227407e8539b2741db318f1"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"job\": \"Automation Tester\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseurl}}/users/1",
+          "host": [
+            "{{baseurl}}"
+          ],
+          "path": [
+            "users",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "bad-req",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// const responsebody = pm.response.json();\r\n\r\n// pm.test(\"Status code validation\", () => {\r\n//     pm.expect(pm.response.code).to.be.oneOf([400,401,403,404,422]);\r\n// });\r\n\r\nconst allowedStatusCodes = [400, 401, 402, 403, 422];\r\n\r\npm.test(\"Status code validation\", () => {\r\n    pm.expect(pm.response.code).to.be.oneOf(allowedStatusCodes);\r\n});\r\n"
+            ]
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const testCases = [\r\n    {\r\n        name: \"Missing password\",\r\n        body: { email: \"peter@klaven\" }\r\n    },\r\n    {\r\n        name: \"Invalid credentials\",\r\n        body: {\r\n            email: \"invalid@email.com\",\r\n            password: \"wrong123\"\r\n        }\r\n    },\r\n    {\r\n        name: \"Empty email\",\r\n        body: {\r\n            email: \"\",\r\n            password: \"cityslicka\"\r\n        }\r\n    },\r\n    {\r\n        name: \"Invalid email format\",\r\n        body: {\r\n            email: \"not-an-email\",\r\n            password: \"\"\r\n        }\r\n    },\r\n    {\r\n        name: \"Missing email\",\r\n        body: { password: \"cityslicka\" }\r\n    }\r\n];\r\n\r\nconst randomIndex = Math.floor(Math.random() * testCases.length);\r\nconst selectedCase = testCases[randomIndex];\r\n\r\npm.collectionVariables.set(\"requestBody\",JSON.stringify(selectedCase.body));\r\n\r\nconsole.log(\"Selected test case:\", selectedCase.name);\r\nconsole.log(\"Generated request body:\", JSON.stringify(selectedCase.body));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "reqres_3db8518cd227407e8539b2741db318f1"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "// {\r\n//     \"email\": \"eve.holt@reqres.in\"\r\n//     //  \"password\": \"cityslicka\"\r\n    \r\n\r\n// }\r\n\r\n{{requestBody}}\r\n\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseurl}}/login",
+          "host": [
+            "{{baseurl}}"
+          ],
+          "path": [
+            "login"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "access-token",
+      "value": ""
+    },
+    {
+      "key": "baseurl",
+      "value": ""
+    },
+    {
+      "key": "search-id",
+      "value": ""
+    },
+    {
+      "key": "user-fName",
+      "value": ""
+    },
+    {
+      "key": "user-lName",
+      "value": ""
+    },
+    {
+      "key": "user-email",
+      "value": ""
+    },
+    {
+      "key": "actualfirst-name",
+      "value": ""
+    },
+    {
+      "key": "actuallast-name",
+      "value": ""
+    },
+    {
+      "key": "actual-job",
+      "value": ""
+    },
+    {
+      "key": "updateat",
+      "value": ""
+    },
+    {
+      "key": "new-job",
+      "value": ""
+    },
+    {
+      "key": "requestBody",
+      "value": ""
+    }
+  ]
+}
